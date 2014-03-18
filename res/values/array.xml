@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="bus_ssids">
+        <item>Bedrebustur</item>
+        <item>Arriva Online</item>
+        <item>Anchersen Rute</item>
+    </string-array>
+    <string-array name="train_ssids">
+        <item>CommuteNet</item>
+    </string-array>
+    <string-array name="train_station_ssids">
+        <item>STOG_DSB</item>
+        <item>WLAN_DSB</item>
+        <item>HOTSPOT_DSB</item>
+        <item>DSB_HOTSPOT</item>
+    </string-array>
+
+    <integer-array name="train_underground_cells">
+        <item>26536896</item>
+        <item>26536897</item>
+        <item>26536898</item>
+        <item>26536699</item>
+    </integer-array>
+    <integer-array name="metro_underground_cells">
+        <item>26413052</item>
+        <item>26413053</item>
+        <item>26471132</item>
+        <item>26471133</item>
+        <item>26471134</item>
+        <item>26471139</item>
+        <item>26471140</item>
+        <item>26471141</item>
+        <item>26471142</item>
+        <item>26471143</item>
+        <item>26471144</item>
+        <item>26477766</item>
+        <item>26477769</item>
+        <item>26536685</item>
+        <item>26536686</item>
+        <item>26536687</item>
+        <item>26536688</item>
+        <item>26536689</item>
+        <item>26536690</item>
+        <item>26536695</item>
+        <item>26536696</item>
+        <item>26536697</item>
+        <item>26536698</item>
+        <item>26536700</item>
+        <item>26536705</item>
+        <item>26536706</item>
+        <item>26536707</item>
+        <item>26536708</item>
+        <item>26536709</item>
+        <item>26536710</item>
+        <item>26536715</item>
+        <item>26536716</item>
+        <item>26536717</item>
+        <item>26536718</item>
+        <item>26536719</item>
+        <item>26536720</item>
+        <item>26536725</item>
+        <item>26536726</item>
+        <item>26536727</item>
+        <item>26536728</item>
+        <item>26536729</item>
+        <item>26536730</item>
+        <item>26536735</item>
+        <item>26536736</item>
+        <item>26536737</item>
+        <item>26536738</item>
+        <item>26536739</item>
+        <item>26536740</item>
+        <item>26536748</item>
+        <item>26536749</item>
+        <item>26536750</item>
+        <item>26536755</item>
+        <item>26536756</item>
+        <item>26536757</item>
+        <item>26536758</item>
+        <item>26536759</item>
+    </integer-array>
+    <integer-array name="metro_underground_cells_ignore">
+        <item>-1</item>
+        <item>2147483647</item>
+    </integer-array>
+
+</resources>

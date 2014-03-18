@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Rejsekort Reminder</string>
+    <string name="action_settings">Settings</string>
+    <string name="mode_label_default">Unknown activity</string>
+    <string name="service_switch">Service status</string>
+    <string name="wifiNotEnabledMessage">Wifi not enabled. Please enable wifi.</string>
+    <string name="bus">bus</string>
+    <string name="sTrain">S-train</string>
+    <string name="metro">metro</string>
+    <string name="gotOff">Got off the </string>
+    <string name="rememberToCheckOut">Remember to check out or check in again.</string>
+    <string name="title">Rejsekort Reminder</string>
+    <string name="usageInformation">Please add the widget to your homescreen to see travelling information. The widget can also be used to steer the app in the right direction. For example: if the app doesn\'t find out by itself, you can tell it that you\'re in a bus and still get a reminder when you get off.</string>
+
+</resources>

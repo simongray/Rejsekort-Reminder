@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_shape" 
+	style="@style/AppTheme">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Updating... Please wait."
+        android:textColor="@color/widgetTitleColor"
+        android:textSize="18sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/notCorrect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/title"
+        android:layout_below="@+id/modeOfTransport"
+        android:layout_marginTop="25dp"
+        android:fontFamily="sans-serif"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        android:textStyle="normal" />
+
+    <ImageView
+        android:id="@+id/transportIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="7dp"
+        android:src="@drawable/na" />
+
+    <TextView
+        android:id="@+id/modeOfTransport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/transportIcon"
+        android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@+id/transportIcon"
+        android:fontFamily="sans-serif-light"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="55sp"
+        android:textStyle="normal" />
+    
+</RelativeLayout>
