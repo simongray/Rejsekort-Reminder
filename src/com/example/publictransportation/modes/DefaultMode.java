@@ -2,9 +2,7 @@ package com.example.publictransportation.modes;
 
 import java.util.List;
 
-
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.example.publictransportation.R;
 import com.example.publictransportation.profiles.AbstractProfile;

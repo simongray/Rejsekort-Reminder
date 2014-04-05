@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -23,7 +22,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.example.publictransportation.MainActivity;
 import com.example.publictransportation.R;
@@ -48,8 +46,8 @@ public class TrackerService extends Service implements IModeManager {
 	Handler handler;
 
 	// System services
-	NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-	Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+	NotificationManager notificationManager;
+	Vibrator vibrator;
 
 	public static final String FORCE_TRANSPORTATION_MODE = "TrackerService.CHANGE_TRANSPORTATION_MODE";
 
@@ -60,6 +58,9 @@ public class TrackerService extends Service implements IModeManager {
 		profile = new DefaultProfile();
 
 		handler = new Handler();
+		
+		notificationManager =  (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		modeChooserReceiver = new ModeChooserReceiver();
 		registerReceiver(modeChooserReceiver, new IntentFilter(FORCE_TRANSPORTATION_MODE));

@@ -20,7 +20,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.publictransportation.service.TrackerService;
+//import com.example.publictransportation.service.TrackerService;
 
 public class MainActivity extends Activity {
 
@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 		onOffSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
+				if (buttonView.isChecked()) {
 					if (isWifiEnabled()) {
 						startTracker();
 					} else {
@@ -54,7 +54,9 @@ public class MainActivity extends Activity {
 						onOffSwitch.setChecked(false);
 					}
 				} else {
-					stopTracker();
+					if (isTrackerServiceRunning()) {
+						stopTracker();
+					}
 				}
 			}
 		});
@@ -63,7 +65,11 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public void onResume() {
-		onOffSwitch.setChecked(isTrackerServiceRunning());
+		super.onResume();
+		if (isTrackerServiceRunning())
+		{
+			onOffSwitch.setChecked(true);
+		}
 	}
 
 
@@ -105,8 +111,8 @@ public class MainActivity extends Activity {
 
 	// Method for starting the tracker service (with an intent)
 	public void startTracker() {		
-		// good explanation of startService/stopService vs bindService/unbindService:
-		// http://stackoverflow.com/questions/3514287/android-service-startservice-and-bindservice
+//		 good explanation of startService/stopService vs bindService/unbindService:
+//		 http://stackoverflow.com/questions/3514287/android-service-startservice-and-bindservice
 		Intent intent = new Intent(MainActivity.this, com.example.publictransportation.service.TrackerService.class);
 		startService(intent);
 	}
