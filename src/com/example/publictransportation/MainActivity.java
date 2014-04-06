@@ -5,20 +5,18 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 //import com.example.publictransportation.service.TrackerService;
 
@@ -29,7 +27,7 @@ public class MainActivity extends Activity {
 
 	// used to toggle switch off when there's no wifi
 	private WifiStateReceiver wifiStateReceiver;
-	
+
 	// system services
 	private WifiManager wifiManager;
 
@@ -40,35 +38,46 @@ public class MainActivity extends Activity {
 
 		// On/Off switch to turn on and off the whole service
 		onOffSwitch = (Switch) findViewById(R.id.on_off_switch);
-		
+
 		wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
-		onOffSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		Log.i("onCreate", "onCreate");
+		
+		// using onClickListener to prevent being checked automatically by system
+		// http://stackoverflow.com/questions/9129858/how-can-i-distinguish-whether-value-is-changed-by-user-or-programmatically-incl
+		onOffSwitch.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onClick(View v) {
+				CompoundButton buttonView = (CompoundButton) v;
 				if (buttonView.isChecked()) {
 					if (isWifiEnabled()) {
+						Log.i("onCheckedChange", "startTracker");
 						startTracker();
 					} else {
+						Log.i("onCheckedChange", "wifinotenabled message");
 						displayWifiNotEnabledMessage();
 						onOffSwitch.setChecked(false);
 					}
 				} else {
-					if (isTrackerServiceRunning()) {
-						stopTracker();
-					}
+					Log.i("onCheckedChange", "stopTracker");
+					stopTracker();
 				}
 			}
 		});
 	}
-	
-	
+
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		if (isTrackerServiceRunning())
 		{
+			Log.i("onResume", "trackerservice is running");
 			onOffSwitch.setChecked(true);
+		}
+		else {
+			Log.i("onResume", "trackerservice is NOT running!!");
+			onOffSwitch.setChecked(false);
 		}
 	}
 
@@ -90,7 +99,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		
+
 		// Register the receiver, to retrieve broadcasts about the Wifi state, from the Android system
 		wifiStateReceiver = new WifiStateReceiver();
 		registerReceiver(wifiStateReceiver, new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
@@ -111,8 +120,8 @@ public class MainActivity extends Activity {
 
 	// Method for starting the tracker service (with an intent)
 	public void startTracker() {		
-//		 good explanation of startService/stopService vs bindService/unbindService:
-//		 http://stackoverflow.com/questions/3514287/android-service-startservice-and-bindservice
+		//		 good explanation of startService/stopService vs bindService/unbindService:
+		//		 http://stackoverflow.com/questions/3514287/android-service-startservice-and-bindservice
 		Intent intent = new Intent(MainActivity.this, com.example.publictransportation.service.TrackerService.class);
 		startService(intent);
 	}
@@ -146,7 +155,7 @@ public class MainActivity extends Activity {
 			int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
 
 			// disable the service on/off switch when wifi is disabled
-			if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
+			if (wifiState == WifiManager.WIFI_STATE_DISABLED && isTrackerServiceRunning()) {
 
 				// We need to know if API 18/scanning always on mode is available
 				// because if it's available, there's no need to switch off the service
