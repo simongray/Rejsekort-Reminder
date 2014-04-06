@@ -7,7 +7,7 @@
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="19" />
-    
+
     <!-- REQUIRED FOR ALERT DIALOG FROM SERVICE -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
@@ -36,8 +36,7 @@
         android:theme="@style/android:Theme.Holo.NoActionBar.Fullscreen" >
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="4132500" />
-        <!--  Hardcoded play services version -->
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name="com.example.publictransportation.MainActivity"

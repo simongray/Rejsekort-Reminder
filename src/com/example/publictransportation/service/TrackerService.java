@@ -12,6 +12,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -48,8 +51,18 @@ public class TrackerService extends Service implements IModeManager {
 	// System services
 	NotificationManager notificationManager;
 	Vibrator vibrator;
+	
+	private String latestMacAddress;
+	
+	public static final int MODE_RETENTION_LIMIT = 20000; // 20 seconds
 
 	public static final String FORCE_TRANSPORTATION_MODE = "TrackerService.CHANGE_TRANSPORTATION_MODE";
+	
+	// labels for sharedprefences
+	public static final String MODE_ON_EXIT = "MODE_ON_EXIT";
+	public static final String MAC_ADDRESS_ON_EXIT = "MAC_ADDRESS_ON_EXIT";
+	public static final String IS_FORCED_ON_EXIT = "IS_FORCED_ON_EXIT";
+	public static final String TIME_ON_EXIT = "TIME_ON_EXIT";
 
 	@Override
 	public void onCreate() {
@@ -74,79 +87,106 @@ public class TrackerService extends Service implements IModeManager {
 		}
 	}
 
-	// called from outside through binder
-	// ForcedMode identifies itself as newMode specified in paramter
-	public void forceMode(ModeTypes newMode) {
-		// update widgets on homescreen
-		updateWidgets(newMode);
+    // called from outside through binder
+    // ForcedMode identifies itself as newMode specified in paramter
+    public void forceMode(ModeTypes newMode) {
+            // update widgets on homescreen
+            updateWidgets(newMode);
 
-		// Kill the previous before creating a new one
-		killMode();
+            // Kill the previous before creating a new one
+            killMode();
 
-		// MetroMode already includes exit logic similar to ForcedMode
-		// this also prevents double notifications when exiting ForcedMode in metro tunnel
-		if (newMode == ModeTypes.METRO) {
-			mode = new MetroMode(profile, this);
-		}
-		// this gives the user the option to always switch to DefaultMode without notifications
-		else if (newMode == ModeTypes.DEFAULT) {
-			mode = new DefaultMode(profile, this);
-		}
-		// for busses and s-trains we enter this "fake" mode
-		else {
-			mode = new ForcedMode(profile, this, newMode);
-		}
-	}
+            mode = forcedModeFromModeType(newMode);
+    }
 
-	@Override
-	public void changeMode(ModeTypes newMode, String latestMacAddress) {
+    @Override
+    public void changeMode(ModeTypes newMode, String latestMacAddress) {
 
-		// the actual reminder code
-		ModeTypes oldMode = mode.getType();
-		if (newMode != ModeTypes.OFF && (oldMode == ModeTypes.BUS || oldMode == ModeTypes.S_TRAIN || oldMode == ModeTypes.METRO)) {
-			showNotification(oldMode);
-		}
+            // the actual reminder code
+            ModeTypes oldMode = mode.getType();
+            if (newMode != ModeTypes.OFF && (oldMode == ModeTypes.BUS || oldMode == ModeTypes.S_TRAIN || oldMode == ModeTypes.METRO)) {
+                    showNotification(oldMode);
+            }
 
-		// update widgets on homescreen
-		updateWidgets(newMode);
+            // update widgets on homescreen
+            updateWidgets(newMode);
 
-		// Kill the previous before creating a new one
-		killMode();
+            // Kill the previous before creating a new one
+            killMode();
 
-		// then create and reference the new mode
-		if (newMode == ModeTypes.DEFAULT) {
-			mode = new DefaultMode(profile, this);
-		}
-		else if (newMode == ModeTypes.BUS) {
-			mode = new BusMode(profile, this, latestMacAddress);
-		}
-		else if (newMode == ModeTypes.S_TRAIN) {
-			mode = new STrainMode(profile, this, latestMacAddress);
-		}
-		else if (newMode == ModeTypes.METRO) {
-			mode = new MetroMode(profile, this);
-		}
-		else if (newMode == ModeTypes.MOVING) {
-			mode = new MovingMode(profile, this);
-		}
-		else if (newMode == ModeTypes.WAITING) {
-			mode = new WaitingMode(profile, this);
-		}
-	}
+            mode = modeFromModeType(newMode, latestMacAddress);
+    }
 
+    private AbstractMode modeFromModeType(ModeTypes newMode, String latestMacAddress) {
 
+            this.latestMacAddress = latestMacAddress;
+
+            if (newMode == ModeTypes.BUS) {
+                    return new BusMode(profile, this, latestMacAddress);
+            }
+            else if (newMode == ModeTypes.S_TRAIN) {
+                    return new STrainMode(profile, this, latestMacAddress);
+            }
+            else if (newMode == ModeTypes.METRO) {
+                    return new MetroMode(profile, this);
+            }
+            else if (newMode == ModeTypes.MOVING) {
+                    return new MovingMode(profile, this);
+            }
+            else if (newMode == ModeTypes.WAITING) {
+                    return new WaitingMode(profile, this);
+            }
+            else {
+                    return new DefaultMode(profile, this);
+            }
+    }
+
+    private AbstractMode forcedModeFromModeType(ModeTypes forcedMode) {
+            return new ForcedMode(profile, this, forcedMode);
+    }
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i("trackerservice","TrackerService.onStartCommand()");
-		// debugging with this mode at the moment
-		mode = new DefaultMode(profile, this);
-		updateWidgets(ModeTypes.DEFAULT);
+		
+		SharedPreferences prefs = this.getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE);
+		long timeOnExit = prefs.getLong(TIME_ON_EXIT, System.currentTimeMillis());
+		String modeOnExit = prefs.getString(MODE_ON_EXIT, "DEFAULT");
+		String macAddressOnExit = prefs.getString(MAC_ADDRESS_ON_EXIT, "");
+		boolean isForced = prefs.getBoolean(IS_FORCED_ON_EXIT, false);
+
+		// revert to the retained mode if within mode retention limit
+		if (System.currentTimeMillis() - MODE_RETENTION_LIMIT < timeOnExit) {
+			ModeTypes retainedMode = ModeTypes.valueOf(modeOnExit);
+
+			if (isForced) {
+				mode = forcedModeFromModeType(retainedMode);
+			}
+			else {
+				mode = modeFromModeType(retainedMode, macAddressOnExit);
+			}
+
+			updateWidgets(retainedMode);
+		}
+		else {
+			mode = new DefaultMode(profile, this);
+			updateWidgets(ModeTypes.DEFAULT);
+		}
 
 		return Service.START_STICKY;
 	}
 
 	@Override
 	public void onDestroy() {
+		// for storing mode data between service interruptions
+		SharedPreferences prefs = this.getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putString(MODE_ON_EXIT, mode.getType().toString());
+		editor.putString(MAC_ADDRESS_ON_EXIT, latestMacAddress);
+		editor.putBoolean(IS_FORCED_ON_EXIT, mode.isForced());
+		editor.putLong(TIME_ON_EXIT, System.currentTimeMillis());
+		editor.commit();
+		
 		unregisterReceiver(modeChooserReceiver);
 		updateWidgets(ModeTypes.OFF);
 		killMode();

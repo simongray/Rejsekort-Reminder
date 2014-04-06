@@ -66,7 +66,6 @@ public class MainActivity extends Activity {
 		});
 	}
 
-
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -79,21 +78,6 @@ public class MainActivity extends Activity {
 			Log.i("onResume", "trackerservice is NOT running!!");
 			onOffSwitch.setChecked(false);
 		}
-	}
-
-
-	@SuppressLint("NewApi")
-	private Boolean isWifiEnabled() {
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-			return (wifiManager.isScanAlwaysAvailable() || wifiManager.isWifiEnabled());
-		}
-		else {
-			return wifiManager.isWifiEnabled();
-		}
-	}
-
-	private void displayWifiNotEnabledMessage() {
-		Toast.makeText(this, getString(R.string.wifiNotEnabledMessage), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -111,13 +95,6 @@ public class MainActivity extends Activity {
 		unregisterReceiver(wifiStateReceiver);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
 	// Method for starting the tracker service (with an intent)
 	public void startTracker() {		
 		//		 good explanation of startService/stopService vs bindService/unbindService:
@@ -126,15 +103,10 @@ public class MainActivity extends Activity {
 		startService(intent);
 	}
 
-	public void onPause() {
-		super.onPause();
-	}
-
 	public void stopTracker() {
 		Intent intent = new Intent(MainActivity.this, com.example.publictransportation.service.TrackerService.class);		
 		stopService(intent);
 	}
-
 
 	// used every time we launch the app, to set the UI up correctly
 	// CONSIDER: finding a quicker, less intensive way of getting the same info
@@ -146,6 +118,27 @@ public class MainActivity extends Activity {
 			}
 		}
 		return false;
+	}
+	
+	@SuppressLint("NewApi")
+	private Boolean isWifiEnabled() {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+			return (wifiManager.isScanAlwaysAvailable() || wifiManager.isWifiEnabled());
+		}
+		else {
+			return wifiManager.isWifiEnabled();
+		}
+	}
+
+	private void displayWifiNotEnabledMessage() {
+		Toast.makeText(this, getString(R.string.wifiNotEnabledMessage), Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
 	}
 
 	// Inner class: Receives the broadcasts about the Wifi state, if it's disabled or not
