@@ -15,6 +15,6 @@ It is licensed with the GPL v3.
 
 
 
-[report]: paper_FINAL.pdf
+[report]: https://github.com/simongray/Rejsekort-Reminder/raw/master/paper_FINAL.pdf
 [demo]: https://www.youtube.com/watch?v=AwHwqoGhI1Q
 [screenshot]: screenshot.jpg
