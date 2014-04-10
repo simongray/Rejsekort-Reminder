@@ -9,7 +9,7 @@
     <string name="bus">bus</string>
     <string name="sTrain">S-train</string>
     <string name="metro">metro</string>
-    <string name="gotOff">Got off the </string>
+    <string name="gotOff">"Got off the "</string>
     <string name="rememberToCheckOut">Remember to check out or check in again.</string>
     <string name="title">Rejsekort Reminder</string>
     <string name="usageInformation">Please add the widget to your homescreen to see travelling information. The widget can also be used to steer the app in the right direction. For example: if the app doesn\'t find out by itself, you can tell it that you\'re in a bus and still get a reminder when you get off.</string>
