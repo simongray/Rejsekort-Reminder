@@ -17,7 +17,7 @@ public class LogItem {
 	
 	@Override
 	public String toString() {
-		Format formatter = new SimpleDateFormat("dd/MM hh:mm:ss");
+		Format formatter = new SimpleDateFormat("dd/MM HH:mm:ss");
 		String formattedDate = formatter.format(date);
 		return formattedDate + ", " + String.valueOf(type) + ", " + data;
 	}
