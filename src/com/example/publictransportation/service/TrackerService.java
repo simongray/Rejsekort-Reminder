@@ -47,6 +47,7 @@ public class TrackerService extends Service implements IModeManager {
 	AbstractProfile profile;
 	ModeChooserReceiver modeChooserReceiver;
 	Handler handler;
+	Logger logger;
 
 	// System services
 	NotificationManager notificationManager;
@@ -69,8 +70,8 @@ public class TrackerService extends Service implements IModeManager {
 		super.onCreate();
 
 		profile = new DefaultProfile();
-
 		handler = new Handler();
+		logger = new Logger();
 		
 		notificationManager =  (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -190,6 +191,8 @@ public class TrackerService extends Service implements IModeManager {
 		unregisterReceiver(modeChooserReceiver);
 		updateWidgets(ModeTypes.OFF);
 		killMode();
+		
+		logger.kill();
 
 		// Change the widget to DefaultMode when the service is stopped - 
 		// or else it will "hang" in another mode if the service is stopped in a mode which is not Default Mode

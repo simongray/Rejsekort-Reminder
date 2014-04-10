@@ -7,6 +7,9 @@
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="19" />
+    
+    <!-- REQUIRED FOR LOGGING TO A FILE -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- REQUIRED FOR ALERT DIALOG FROM SERVICE -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
