@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Rejsekort Reminder</string>
+    <string name="action_settings">Indstillinger</string>
+    <string name="mode_label_default">Ukendt aktivitet</string>
+    <string name="service_switch">Service status</string>
+    <string name="wifiNotEnabledMessage">Trådløst internet er ikke tændt. Tænd venligst for det.</string>
+    <string name="bus">bus</string>
+    <string name="sTrain">S-tog</string>
+    <string name="metro">metro</string>
+    <string name="gotOff">"Stod af "</string>
+    <string name="rememberToCheckOut">Husk at tjekke ud eller ind igen.</string>
+    <string name="title">Rejsekort Reminder</string>
+    <string name="usageInformation">Tilføj widget\'en til din hjemmeskærm for at se rejseinformation. Widget\'en kan også bruges til at dirigere app\'en den rigtige vej. For eksempel: hvis app\'en ikke selv finder ud af det, kan du fortælle den at du er i en bus og stadig få en reminder, når du stiger af.</string>
+
+</resources>
