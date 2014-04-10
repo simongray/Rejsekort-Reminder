@@ -21,4 +21,8 @@ public class LogItem {
 		String formattedDate = formatter.format(date);
 		return formattedDate + ", " + String.valueOf(type) + ", " + data;
 	}
+	
+	public LogTypes getType() {
+		return type;
+	}
 }
