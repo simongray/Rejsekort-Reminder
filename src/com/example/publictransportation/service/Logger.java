@@ -56,6 +56,9 @@ public class Logger {
 			}
 			buf.close();
 			Log.i("logger", "successfully wrote to log file");
+			items.clear();
+			Log.i("logger", "cleared buffer");
+
 		}
 		catch (IOException e) {
 			e.printStackTrace();
