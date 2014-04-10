@@ -83,6 +83,7 @@ public class TrackerService extends Service implements IModeManager {
 	private void killMode() {
 		// Kill the previous mode first
 		if (mode != null) {
+			log(LogTypes.MODE, "killing " + String.valueOf(mode.getType()));
 			mode.kill();
 			mode = null;
 		}
@@ -91,6 +92,8 @@ public class TrackerService extends Service implements IModeManager {
 	// called from outside through binder
 	// ForcedMode identifies itself as newMode specified in paramter
 	public void forceMode(ModeTypes newMode) {
+		log(LogTypes.MODE, "forcing " + String.valueOf(newMode));
+
 		// update widgets on homescreen
 		updateWidgets(newMode);
 
@@ -102,7 +105,8 @@ public class TrackerService extends Service implements IModeManager {
 
 	@Override
 	public void changeMode(ModeTypes newMode, String latestMacAddress) {
-
+		log(LogTypes.MODE, "changing to " + String.valueOf(newMode) + ", latestMacAddress: " + latestMacAddress);
+		
 		// the actual reminder code
 		ModeTypes oldMode = mode.getType();
 		if (newMode != ModeTypes.OFF && (oldMode == ModeTypes.BUS || oldMode == ModeTypes.S_TRAIN || oldMode == ModeTypes.METRO)) {
@@ -179,6 +183,8 @@ public class TrackerService extends Service implements IModeManager {
 
 	@Override
 	public void onDestroy() {
+		log(LogTypes.SERVICE, "TrackerService was killed");
+		
 		// for storing mode data between service interruptions
 		SharedPreferences prefs = this.getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
@@ -358,6 +364,11 @@ public class TrackerService extends Service implements IModeManager {
 		// Otherwise showing alertdialogs from services will crash the app
 		alert.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
 		alert.show();
+	}
+	
+	@Override
+	public void log(LogTypes type, String data) {
+		logger.log(type, data);
 	}
 
 	@Override

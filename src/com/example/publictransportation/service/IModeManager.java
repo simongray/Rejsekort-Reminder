@@ -15,4 +15,7 @@ public interface IModeManager {
 	
 	// to allow the transportation mode to kill the service
 	public void abortOnMissingWifi();
+	
+	// allow modes to use the logging functionality
+	public void log(LogTypes type, String data);
 }

@@ -14,6 +14,7 @@ public abstract class AbstractSensor {
 	// (this is called by whatever processes the derived non-abstract class launches)
 	void output(String data) {
 		parentMode.input(this, data);
+		parentMode.log(this.getType(), this.getLabel(), data);
 	}
 	
 	// eventually called by the parent transport mode

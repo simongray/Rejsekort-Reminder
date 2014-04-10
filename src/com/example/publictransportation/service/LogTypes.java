@@ -1,5 +1,5 @@
 package com.example.publictransportation.service;
 
 public enum LogTypes {
-	ERROR, SENSOR, MODE
+	ERROR, SENSOR, MODE, SERVICE
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.os.Environment;
+import android.util.Log;
 
 public class Logger {
 
@@ -17,11 +18,14 @@ public class Logger {
 
 
 	public Logger() {
+		Log.i("Logger", "constructor");
 		filename = Environment.getExternalStorageDirectory() + File.separator + "rejsereminder.log";
+		Log.i("logger", "writing to: " + filename);
 		items = new ArrayList<LogItem>();
 	}
 
 	public void log(LogTypes type, String data) {
+		Log.i("Logger", "log()");
 		LogItem item = new LogItem(type, data);
 		items.add(item);
 
@@ -31,6 +35,7 @@ public class Logger {
 	}
 
 	private void writeToFile() {
+		Log.i("Logger", "writeToFile()");
 		File logFile = new File(filename);
 		
 		if (!logFile.exists()) {
@@ -50,13 +55,16 @@ public class Logger {
 				buf.newLine();
 			}
 			buf.close();
+			Log.i("logger", "successfully wrote to log file");
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			Log.e("logger", "couldn't write to log file!!");
 		}
 	}
 
 	public void kill() {
+		Log.i("Logger", "Kill()");
 		writeToFile();
 	}
 }

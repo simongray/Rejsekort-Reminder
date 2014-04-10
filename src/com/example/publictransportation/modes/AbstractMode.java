@@ -12,6 +12,7 @@ import com.example.publictransportation.sensors.ActivitySensor;
 import com.example.publictransportation.sensors.SensorTypes;
 import com.example.publictransportation.sensors.WifiSensor;
 import com.example.publictransportation.service.IModeManager;
+import com.example.publictransportation.service.LogTypes;
 
 public abstract class AbstractMode {
 
@@ -67,5 +68,9 @@ public abstract class AbstractMode {
 		for (AbstractSensor sensor : sensors) {
 			sensor.kill();
 		}
+	}
+
+	public void log(SensorTypes type, String label, String data) {
+		manager.log(LogTypes.SENSOR, String.valueOf(type) + " (" + label + "): " + data);
 	}
 }
