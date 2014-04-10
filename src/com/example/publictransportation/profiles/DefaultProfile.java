@@ -37,17 +37,6 @@ public class DefaultProfile extends AbstractProfile {
 	}
 
 	@Override
-	public Boolean isSpeechOn() {
-		return false; // true: makes my phone crash when receiving a notification (with sound)!! - Simon
-	}
-
-	@Override
-	public Boolean isToastOn() {
-		return false;
-	}
-
-
-	@Override
 	public int getDefaultActivitySensorCutoff() {
 		return 50;
 	}

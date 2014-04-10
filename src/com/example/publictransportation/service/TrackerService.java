@@ -52,13 +52,13 @@ public class TrackerService extends Service implements IModeManager {
 	// System services
 	NotificationManager notificationManager;
 	Vibrator vibrator;
-	
+
 	private String latestMacAddress;
-	
+
 	public static final int MODE_RETENTION_LIMIT = 20000; // 20 seconds
 
 	public static final String FORCE_TRANSPORTATION_MODE = "TrackerService.CHANGE_TRANSPORTATION_MODE";
-	
+
 	// labels for sharedprefences
 	public static final String MODE_ON_EXIT = "MODE_ON_EXIT";
 	public static final String MAC_ADDRESS_ON_EXIT = "MAC_ADDRESS_ON_EXIT";
@@ -72,7 +72,7 @@ public class TrackerService extends Service implements IModeManager {
 		profile = new DefaultProfile();
 		handler = new Handler();
 		logger = new Logger();
-		
+
 		notificationManager =  (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -88,68 +88,68 @@ public class TrackerService extends Service implements IModeManager {
 		}
 	}
 
-    // called from outside through binder
-    // ForcedMode identifies itself as newMode specified in paramter
-    public void forceMode(ModeTypes newMode) {
-            // update widgets on homescreen
-            updateWidgets(newMode);
+	// called from outside through binder
+	// ForcedMode identifies itself as newMode specified in paramter
+	public void forceMode(ModeTypes newMode) {
+		// update widgets on homescreen
+		updateWidgets(newMode);
 
-            // Kill the previous before creating a new one
-            killMode();
+		// Kill the previous before creating a new one
+		killMode();
 
-            mode = forcedModeFromModeType(newMode);
-    }
+		mode = forcedModeFromModeType(newMode);
+	}
 
-    @Override
-    public void changeMode(ModeTypes newMode, String latestMacAddress) {
+	@Override
+	public void changeMode(ModeTypes newMode, String latestMacAddress) {
 
-            // the actual reminder code
-            ModeTypes oldMode = mode.getType();
-            if (newMode != ModeTypes.OFF && (oldMode == ModeTypes.BUS || oldMode == ModeTypes.S_TRAIN || oldMode == ModeTypes.METRO)) {
-                    showNotification(oldMode);
-            }
+		// the actual reminder code
+		ModeTypes oldMode = mode.getType();
+		if (newMode != ModeTypes.OFF && (oldMode == ModeTypes.BUS || oldMode == ModeTypes.S_TRAIN || oldMode == ModeTypes.METRO)) {
+			showNotification(oldMode);
+		}
 
-            // update widgets on homescreen
-            updateWidgets(newMode);
+		// update widgets on homescreen
+		updateWidgets(newMode);
 
-            // Kill the previous before creating a new one
-            killMode();
+		// Kill the previous before creating a new one
+		killMode();
 
-            mode = modeFromModeType(newMode, latestMacAddress);
-    }
+		mode = modeFromModeType(newMode, latestMacAddress);
+	}
 
-    private AbstractMode modeFromModeType(ModeTypes newMode, String latestMacAddress) {
+	private AbstractMode modeFromModeType(ModeTypes newMode, String latestMacAddress) {
 
-            this.latestMacAddress = latestMacAddress;
+		this.latestMacAddress = latestMacAddress;
 
-            if (newMode == ModeTypes.BUS) {
-                    return new BusMode(profile, this, latestMacAddress);
-            }
-            else if (newMode == ModeTypes.S_TRAIN) {
-                    return new STrainMode(profile, this, latestMacAddress);
-            }
-            else if (newMode == ModeTypes.METRO) {
-                    return new MetroMode(profile, this);
-            }
-            else if (newMode == ModeTypes.MOVING) {
-                    return new MovingMode(profile, this);
-            }
-            else if (newMode == ModeTypes.WAITING) {
-                    return new WaitingMode(profile, this);
-            }
-            else {
-                    return new DefaultMode(profile, this);
-            }
-    }
+		if (newMode == ModeTypes.BUS) {
+			return new BusMode(profile, this, latestMacAddress);
+		}
+		else if (newMode == ModeTypes.S_TRAIN) {
+			return new STrainMode(profile, this, latestMacAddress);
+		}
+		else if (newMode == ModeTypes.METRO) {
+			return new MetroMode(profile, this);
+		}
+		else if (newMode == ModeTypes.MOVING) {
+			return new MovingMode(profile, this);
+		}
+		else if (newMode == ModeTypes.WAITING) {
+			return new WaitingMode(profile, this);
+		}
+		else {
+			return new DefaultMode(profile, this);
+		}
+	}
 
-    private AbstractMode forcedModeFromModeType(ModeTypes forcedMode) {
-            return new ForcedMode(profile, this, forcedMode);
-    }
-	
+	private AbstractMode forcedModeFromModeType(ModeTypes forcedMode) {
+		return new ForcedMode(profile, this, forcedMode);
+	}
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i("trackerservice","TrackerService.onStartCommand()");
-		
+
 		SharedPreferences prefs = this.getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE);
 		long timeOnExit = prefs.getLong(TIME_ON_EXIT, System.currentTimeMillis());
 		String modeOnExit = prefs.getString(MODE_ON_EXIT, "DEFAULT");
@@ -187,11 +187,11 @@ public class TrackerService extends Service implements IModeManager {
 		editor.putBoolean(IS_FORCED_ON_EXIT, mode.isForced());
 		editor.putLong(TIME_ON_EXIT, System.currentTimeMillis());
 		editor.commit();
-		
+
 		unregisterReceiver(modeChooserReceiver);
 		updateWidgets(ModeTypes.OFF);
 		killMode();
-		
+
 		logger.kill();
 
 		// Change the widget to DefaultMode when the service is stopped - 
@@ -301,18 +301,17 @@ public class TrackerService extends Service implements IModeManager {
 
 		notificationManager.notify(0, notification);
 
-		// TTS and notification sounds at the same time crashes the app!!
-		if (profile.isSpeechOn() == false) {
-			// play a sound
-			try {
-				Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-				Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
-				ringtone.play();
-			} catch (Exception e) {}
-
-			// also vibrate for extra effect (gets annoying fast)
-			vibrator.vibrate(2000);
+		// play a sound
+		try {
+			Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
+			ringtone.play();
+		} catch (Exception e) {
+			
 		}
+
+		// also vibrate for extra effect (gets annoying fast)
+		vibrator.vibrate(2000);
 	}
 
 	// this inner class deals with scanning results

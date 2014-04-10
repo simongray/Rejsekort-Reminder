@@ -12,9 +12,4 @@ public abstract class AbstractProfile {
 	
 	abstract public int getDefaultActivitySensorCutoff();
 	abstract public int getLowActivitySensorCutoff();
-	
-	// debugging
-	abstract public Boolean isSpeechOn();
-	abstract public Boolean isToastOn();
-
 }
