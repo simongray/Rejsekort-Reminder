@@ -14,7 +14,7 @@ public class Logger {
 	String filename;
 	ArrayList<LogItem> items;
 
-	int BUFFER_LIMIT = 50;
+	int BUFFER_LIMIT = 250;
 
 
 	public Logger() {
