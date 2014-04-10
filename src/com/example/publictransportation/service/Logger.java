@@ -55,14 +55,10 @@ public class Logger {
 				// so that it's easier to notice non-sensor output
 				if (item.getType() != LogTypes.SENSOR) {
 					buf.newLine();
-					buf.append(item.toString());
-					buf.newLine();
-					buf.newLine();
 				}
-				else {
-					buf.append(item.toString());
-					buf.newLine();
-				}
+				
+				buf.append(item.toString());
+				buf.newLine();
 			}
 			buf.close();
 			Log.i("logger", "successfully wrote to log file");
