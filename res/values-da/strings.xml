@@ -12,6 +12,14 @@
     <string name="gotOff">"Stod af "</string>
     <string name="rememberToCheckOut">Husk at tjekke ud eller ind igen.</string>
     <string name="title">Rejsekort Reminder</string>
-    <string name="usageInformation">Tilføj widget\'en til din hjemmeskærm for at se rejseinformation. Widget\'en kan også bruges til at dirigere app\'en den rigtige vej. For eksempel: hvis app\'en ikke selv finder ud af det, kan du fortælle den at du er i en bus og stadig få en reminder, når du stiger af.</string>
-
+    <string name="usageInformation">Tilføj vores widget til din hjemmeskærm for at se rejseinformation. Den kan også bruges til at styre app\'en den rigtige retning. For eksempel: hvis app\'en ikke selv finder ud af det, kan du fortælle den, at du er i en bus og stadig få en reminder, når du stiger af.</string>
+	<string name="forceModeText">"Forkert? Klik venligst her."</string>
+	<string name="currentMode">"Dit transportmiddel er"</string>
+	<string name="serviceOff">"Service kører ikke"</string>
+	<string name="unknown">"ukendt"</string>
+	<string name="off">"slukket"</string>
+	<string name="waiting">"ventende"</string>
+	<string name="onFoot">"til fods"</string>
+	<string name="noneAbove">"ingen af delene"</string>
+	<string name="chooseCorrectMode">"Vælg det korrekte transportmiddel"</string>
 </resources>

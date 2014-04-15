@@ -13,5 +13,13 @@
     <string name="rememberToCheckOut">Remember to check out or check in again.</string>
     <string name="title">Rejsekort Reminder</string>
     <string name="usageInformation">Please add the widget to your homescreen to see travelling information. The widget can also be used to steer the app in the right direction. For example: if the app doesn\'t find out by itself, you can tell it that you\'re in a bus and still get a reminder when you get off.</string>
-
+	<string name="forceModeText">"Not correct? Please click here."</string>
+	<string name="currentMode">"Your mode of transportation is"</string>
+	<string name="serviceOff">"service not running"</string>
+	<string name="unknown">"unknown"</string>
+	<string name="off">"off"</string>
+	<string name="waiting">"waiting"</string>
+	<string name="onFoot">"on foot"</string>
+	<string name="noneAbove">"none of the above"</string>
+	<string name="chooseCorrectMode">"Choose correct mode"</string>
 </resources>

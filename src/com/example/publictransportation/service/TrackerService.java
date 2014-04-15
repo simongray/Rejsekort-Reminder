@@ -232,18 +232,17 @@ public class TrackerService extends Service implements IModeManager {
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, toggleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
 
-		remoteViews.setTextViewText(R.id.notCorrect, "Not correct? Please click here.");
-		remoteViews.setTextViewText(R.id.title, "You are currently travelling by...");
+		remoteViews.setTextViewText(R.id.notCorrect, getString(R.string.forceModeText));
+		remoteViews.setTextViewText(R.id.title, getString(R.string.currentMode));
 
 		if (newMode == ModeTypes.DEFAULT) {
-			remoteViews.setTextViewText(R.id.title, "Your location is");
 			remoteViews.setTextViewTextSize(R.id.modeOfTransport, TypedValue.COMPLEX_UNIT_SP, 42);
-			remoteViews.setTextViewText(R.id.modeOfTransport, "Unknown");
+			remoteViews.setTextViewText(R.id.modeOfTransport, getString(R.string.unknown));
 			remoteViews.setImageViewResource(R.id.transportIcon, R.drawable.unknown);
 		}
 		else if (newMode == ModeTypes.OFF) {
-			remoteViews.setTextViewText(R.id.title, "Service not running");
-			remoteViews.setTextViewText(R.id.modeOfTransport, "Off");
+			remoteViews.setTextViewText(R.id.title, getString(R.string.serviceOff));
+			remoteViews.setTextViewText(R.id.modeOfTransport, getString(R.string.off));
 			remoteViews.setImageViewResource(R.id.transportIcon, R.drawable.unknown);
 		}
 		else if (newMode == ModeTypes.S_TRAIN) {
@@ -259,12 +258,11 @@ public class TrackerService extends Service implements IModeManager {
 			remoteViews.setImageViewResource(R.id.transportIcon, R.drawable.metro);
 		}
 		else if (newMode == ModeTypes.MOVING) {
-			remoteViews.setTextViewText(R.id.modeOfTransport, "Foot");
+			remoteViews.setTextViewText(R.id.modeOfTransport, getString(R.string.onFoot));
 			remoteViews.setImageViewResource(R.id.transportIcon, R.drawable.walking);
 		}
 		else if (newMode == ModeTypes.WAITING) {
-			remoteViews.setTextViewText(R.id.title, "Phone is");
-			remoteViews.setTextViewText(R.id.modeOfTransport, "Sleeping");
+			remoteViews.setTextViewText(R.id.modeOfTransport, getString(R.string.waiting));
 			remoteViews.setImageViewResource(R.id.transportIcon, R.drawable.na);
 		}
 
@@ -337,11 +335,11 @@ public class TrackerService extends Service implements IModeManager {
 
 	public void showForceModeChooser() {
 		final CharSequence[] items = {
-				"Bus", "S-train", "Metro", "None of the above"
+				getString(R.string.bus), getString(R.string.sTrain), getString(R.string.metro), getString(R.string.noneAbove)
 		};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Choose correct mode");
+		builder.setTitle(getString(R.string.chooseCorrectMode));
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int item) {
 				if (item == 0) {
