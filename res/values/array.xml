@@ -43,7 +43,6 @@
         <item>26536689</item>
         <item>26536690</item>
         <item>26536695</item>
-        <item>26536696</item>
         <item>26536697</item>
         <item>26536698</item>
         <item>26536700</item>
@@ -83,6 +82,10 @@
     <integer-array name="metro_underground_cells_ignore">
         <item>-1</item>
         <item>2147483647</item>
+        <item>26536696</item> <!-- Nørreport cell, shared between metro and s-train -->
+    </integer-array>
+    <integer-array name="train_underground_cells_ignore">
+        <item>26536696</item> <!-- Nørreport cell, shared between metro and s-train -->
     </integer-array>
 
 </resources>

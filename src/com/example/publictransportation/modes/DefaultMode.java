@@ -65,8 +65,8 @@ public class DefaultMode extends AbstractMode {
 		String[] trainStationSsids = r.getStringArray(R.array.train_station_ssids);
 		int[] metroUndergroundCells = r.getIntArray(R.array.metro_underground_cells);
 		int[] metroUndergroundCellsIgnore = r.getIntArray(R.array.metro_underground_cells_ignore);
-		int[] trainUndergroundCells = r.getIntArray(R.array.metro_underground_cells);
-		int[] trainUndergrundCellsIgnore = new int[0];
+		int[] trainUndergroundCells = r.getIntArray(R.array.train_underground_cells);
+		int[] trainUndergrundCellsIgnore = r.getIntArray(R.array.train_underground_cells_ignore);
 
 		WifiGroup busGroup = new WifiGroup(BUS, busSsids);
 		WifiGroup trainGroup = new WifiGroup(TRAIN,trainSsids);

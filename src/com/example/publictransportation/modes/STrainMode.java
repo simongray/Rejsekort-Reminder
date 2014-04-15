@@ -28,8 +28,8 @@ public class STrainMode extends AbstractMode {
 
 		Resources r = manager.getApplicationContext().getResources();
 		String[] trainSsids = r.getStringArray(R.array.train_ssids);
-		int[] trainUndergroundCells = r.getIntArray(R.array.metro_underground_cells);
-		int[] trainUndergrundCellsIgnore = new int[0];
+		int[] trainUndergroundCells = r.getIntArray(R.array.train_underground_cells);
+		int[] trainUndergrundCellsIgnore = r.getIntArray(R.array.train_underground_cells_ignore);
 		
 		// if we entered this mode without a MAC address, it is a sure indication we are in a tunnel
 		inTunnel = latestMacAddress.isEmpty()? true : false;
