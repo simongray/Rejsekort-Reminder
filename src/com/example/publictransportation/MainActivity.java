@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -45,10 +46,10 @@ public class MainActivity extends Activity {
 		
 		// using onClickListener to prevent being checked automatically by system
 		// http://stackoverflow.com/questions/9129858/how-can-i-distinguish-whether-value-is-changed-by-user-or-programmatically-incl
-		onOffSwitch.setOnClickListener(new OnClickListener() {
+		onOffSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
 			@Override
-			public void onClick(View v) {
-				CompoundButton buttonView = (CompoundButton) v;
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (buttonView.isChecked()) {
 					if (isWifiEnabled()) {
 						Log.i("onCheckedChange", "startTracker");
@@ -61,7 +62,7 @@ public class MainActivity extends Activity {
 				} else {
 					Log.i("onCheckedChange", "stopTracker");
 					stopTracker();
-				}
+				}				
 			}
 		});
 	}
