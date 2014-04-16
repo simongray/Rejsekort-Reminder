@@ -41,6 +41,8 @@ import com.example.publictransportation.modes.WaitingMode;
 import com.example.publictransportation.profiles.AbstractProfile;
 import com.example.publictransportation.profiles.DefaultProfile;
 
+import de.greenrobot.event.EventBus;
+
 public class TrackerService extends Service implements IModeManager {
 
 	AbstractMode mode;
@@ -72,12 +74,73 @@ public class TrackerService extends Service implements IModeManager {
 		profile = new DefaultProfile();
 		handler = new Handler();
 		logger = new Logger();
+		
+		// handling communication between app components
+		EventBus.getDefault().register(this);
 
 		notificationManager =  (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		modeChooserReceiver = new ModeChooserReceiver();
 		registerReceiver(modeChooserReceiver, new IntentFilter(FORCE_TRANSPORTATION_MODE));
+	}
+	
+	@Override
+	public void onDestroy() {
+		log(LogTypes.SERVICE, "TrackerService was killed");
+		
+		// for storing mode data between service interruptions
+		SharedPreferences prefs = this.getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putString(MODE_ON_EXIT, mode.getType().toString());
+		editor.putString(MAC_ADDRESS_ON_EXIT, latestMacAddress);
+		editor.putBoolean(IS_FORCED_ON_EXIT, mode.isForced());
+		editor.putLong(TIME_ON_EXIT, System.currentTimeMillis());
+		editor.commit();
+
+		unregisterReceiver(modeChooserReceiver);
+		updateWidgets(ModeTypes.OFF);
+		killMode();
+
+		logger.kill();
+		
+		EventBus.getDefault().unregister(this);  
+
+		// Change the widget to DefaultMode when the service is stopped - 
+		// or else it will "hang" in another mode if the service is stopped in a mode which is not Default Mode
+		Log.i("trackerservice","TrackerService.onDestroy()");
+		super.onDestroy();
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.i("trackerservice","TrackerService.onStartCommand()");
+
+		SharedPreferences prefs = this.getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE);
+		long timeOnExit = prefs.getLong(TIME_ON_EXIT, System.currentTimeMillis());
+		String modeOnExit = prefs.getString(MODE_ON_EXIT, "DEFAULT");
+		String macAddressOnExit = prefs.getString(MAC_ADDRESS_ON_EXIT, "");
+		boolean isForced = prefs.getBoolean(IS_FORCED_ON_EXIT, false);
+
+		// revert to the retained mode if within mode retention limit
+		if (System.currentTimeMillis() - MODE_RETENTION_LIMIT < timeOnExit) {
+			ModeTypes retainedMode = ModeTypes.valueOf(modeOnExit);
+
+			if (isForced) {
+				mode = forcedModeFromModeType(retainedMode);
+			}
+			else {
+				mode = modeFromModeType(retainedMode, macAddressOnExit);
+			}
+
+			updateWidgets(retainedMode);
+		}
+		else {
+			mode = new DefaultMode(profile, this);
+			updateWidgets(ModeTypes.DEFAULT);
+		}
+
+		return Service.START_STICKY;
 	}
 
 	private void killMode() {
@@ -148,62 +211,6 @@ public class TrackerService extends Service implements IModeManager {
 
 	private AbstractMode forcedModeFromModeType(ModeTypes forcedMode) {
 		return new ForcedMode(profile, this, forcedMode);
-	}
-
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.i("trackerservice","TrackerService.onStartCommand()");
-
-		SharedPreferences prefs = this.getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE);
-		long timeOnExit = prefs.getLong(TIME_ON_EXIT, System.currentTimeMillis());
-		String modeOnExit = prefs.getString(MODE_ON_EXIT, "DEFAULT");
-		String macAddressOnExit = prefs.getString(MAC_ADDRESS_ON_EXIT, "");
-		boolean isForced = prefs.getBoolean(IS_FORCED_ON_EXIT, false);
-
-		// revert to the retained mode if within mode retention limit
-		if (System.currentTimeMillis() - MODE_RETENTION_LIMIT < timeOnExit) {
-			ModeTypes retainedMode = ModeTypes.valueOf(modeOnExit);
-
-			if (isForced) {
-				mode = forcedModeFromModeType(retainedMode);
-			}
-			else {
-				mode = modeFromModeType(retainedMode, macAddressOnExit);
-			}
-
-			updateWidgets(retainedMode);
-		}
-		else {
-			mode = new DefaultMode(profile, this);
-			updateWidgets(ModeTypes.DEFAULT);
-		}
-
-		return Service.START_STICKY;
-	}
-
-	@Override
-	public void onDestroy() {
-		log(LogTypes.SERVICE, "TrackerService was killed");
-		
-		// for storing mode data between service interruptions
-		SharedPreferences prefs = this.getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putString(MODE_ON_EXIT, mode.getType().toString());
-		editor.putString(MAC_ADDRESS_ON_EXIT, latestMacAddress);
-		editor.putBoolean(IS_FORCED_ON_EXIT, mode.isForced());
-		editor.putLong(TIME_ON_EXIT, System.currentTimeMillis());
-		editor.commit();
-
-		unregisterReceiver(modeChooserReceiver);
-		updateWidgets(ModeTypes.OFF);
-		killMode();
-
-		logger.kill();
-
-		// Change the widget to DefaultMode when the service is stopped - 
-		// or else it will "hang" in another mode if the service is stopped in a mode which is not Default Mode
-		Log.i("trackerservice","TrackerService.onDestroy()");
-		super.onDestroy();
 	}
 
 	@Override
