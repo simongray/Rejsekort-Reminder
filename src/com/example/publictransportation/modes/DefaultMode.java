@@ -132,7 +132,7 @@ public class DefaultMode extends AbstractMode {
 		}
 		// quickest way to get into s-train mode (works on Noerreport St)
 		// the tick limit is there to prevent false positives when passing through
-		if (currentLabel.equals(TRAIN_TUNNEL) && ticks >= S_TRAIN_TUNNEL_COUNT_LIMIT) {
+		else if (currentLabel.equals(TRAIN_TUNNEL) && ticks >= S_TRAIN_TUNNEL_COUNT_LIMIT) {
 			changeMode(ModeTypes.S_TRAIN, "");
 		}
 		// then normal way with s-train
